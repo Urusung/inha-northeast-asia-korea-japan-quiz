@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0f766e">
+<link rel="icon" href="data:,">
 <title>동북아와 한일관계 문제은행</title>
 <style>
 :root {
@@ -418,12 +419,12 @@ footer {
       <h1>동북아와 한일관계 문제은행</h1>
       <a class="home-link" href="index.html">목록</a>
     </div>
-    <p>6·7·9주차 PDF 9개 기반 · 자료별 랜덤 5문제씩 총 45문제</p>
+    <p>6-13주차 PPTX 24개 기반 · 주차별 랜덤 5문제씩 총 40문제</p>
     <div class="pool-info" id="pool-info"></div>
   </header>
 
   <div class="progress-bar" aria-live="polite">
-    <span class="progress-text" id="progress-text">0 / 45</span>
+    <span class="progress-text" id="progress-text">0 / 40</span>
     <div class="progress-track" aria-hidden="true"><div class="progress-fill" id="progress-fill"></div></div>
     <span class="score-badge" id="score-badge">정답 0</span>
   </div>
@@ -431,7 +432,7 @@ footer {
   <div class="filter-bar" id="filter-bar"></div>
 
   <div class="result-card" id="result-card">
-    <div class="result-score" id="result-score">0 / 45</div>
+    <div class="result-score" id="result-score">0 / 40</div>
     <div class="result-detail" id="result-detail">정답률 0%</div>
     <div class="result-message" id="result-message"></div>
     <div class="result-breakdown" id="result-breakdown"></div>
@@ -444,14 +445,20 @@ footer {
     <button class="btn btn-primary" id="submit-btn" type="button">결과 보기</button>
   </div>
 
-  <footer>PDF 강의자료 기반 개인 복습용 문제은행</footer>
+  <footer>PPTX 강의자료 기반 개인 복습용 문제은행</footer>
 </div>
 
 <script src="questions.js"></script>
 <script>
 const POOL = window.QUESTION_POOL || [];
-const LECTURES = window.SOURCE_ORDER || [...new Set(POOL.map(q => q.lec))];
-const PICK_PER_LEC = 5;
+const WEEKS = window.WEEK_ORDER || [...new Set(POOL.map(getWeek))];
+const PICK_PER_WEEK = 5;
+
+function getWeek(q) {
+  const lec = typeof q === "string" ? q : q.lec;
+  const match = String(lec).match(/^(\d+)-/);
+  return match ? `${match[1]}주차` : "기타";
+}
 
 function shuffle(arr) {
   const a = arr.slice();
@@ -491,9 +498,9 @@ function shuffleChoices(q) {
 
 function pickQuestions() {
   const picked = [];
-  for (const lec of LECTURES) {
-    const pool = POOL.filter(q => q.lec === lec);
-    const count = Math.min(PICK_PER_LEC, pool.length);
+  for (const week of WEEKS) {
+    const pool = POOL.filter(q => getWeek(q) === week);
+    const count = Math.min(PICK_PER_WEEK, pool.length);
     let available = pool.filter(q => !state.seenIds.has(q.id));
     if (available.length < count) {
       pool.forEach(q => state.seenIds.delete(q.id));
@@ -520,7 +527,7 @@ function newRound() {
 function render() {
   const container = document.getElementById("quiz-container");
   const indexed = state.questions.map((q, i) => ({ q, i }));
-  const list = state.filter === "all" ? indexed : indexed.filter(x => x.q.lec === state.filter);
+  const list = state.filter === "all" ? indexed : indexed.filter(x => getWeek(x.q) === state.filter);
 
   container.innerHTML = list.map(({ q, i }) => {
     const selected = state.answers[i];
@@ -602,12 +609,12 @@ function updateProgress() {
 
 function renderFilters() {
   const bar = document.getElementById("filter-bar");
-  const items = ["all", ...LECTURES];
-  bar.innerHTML = items.map(lec => {
-    const count = lec === "all" ? state.questions.length : state.questions.filter(q => q.lec === lec).length;
-    const label = lec === "all" ? `전체 (${count})` : `${lec} (${count})`;
-    const cls = state.filter === lec ? "filter-btn active" : "filter-btn";
-    return `<button class="${cls}" data-filter="${escapeHtml(lec)}" type="button">${escapeHtml(label)}</button>`;
+  const items = ["all", ...WEEKS];
+  bar.innerHTML = items.map(week => {
+    const count = week === "all" ? state.questions.length : state.questions.filter(q => getWeek(q) === week).length;
+    const label = week === "all" ? `전체 (${count})` : `${week} (${count})`;
+    const cls = state.filter === week ? "filter-btn active" : "filter-btn";
+    return `<button class="${cls}" data-filter="${escapeHtml(week)}" type="button">${escapeHtml(label)}</button>`;
   }).join("");
 
   bar.querySelectorAll(".filter-btn").forEach(btn => {
@@ -622,8 +629,8 @@ function renderFilters() {
 
 function renderPoolInfo() {
   const info = document.getElementById("pool-info");
-  const perSource = LECTURES.map(lec => `${lec} ${POOL.filter(q => q.lec === lec).length}`).join(" · ");
-  info.textContent = `전체 문제 풀: ${POOL.length}문제 (${perSource})`;
+  const perWeek = WEEKS.map(week => `${week} ${POOL.filter(q => getWeek(q) === week).length}`).join(" · ");
+  info.textContent = `전체 문제 풀: ${POOL.length}문제 (${perWeek})`;
 }
 
 document.getElementById("submit-btn").addEventListener("click", () => {
@@ -632,10 +639,10 @@ document.getElementById("submit-btn").addEventListener("click", () => {
   const correct = state.questions.filter((q, i) => state.answers[i] === q.answer).length;
   const percent = total ? Math.round((correct / total) * 100) : 0;
 
-  const breakdown = LECTURES.map(lec => {
-    const questions = state.questions.map((q, i) => ({ q, i })).filter(x => x.q.lec === lec);
+  const breakdown = WEEKS.map(week => {
+    const questions = state.questions.map((q, i) => ({ q, i })).filter(x => getWeek(x.q) === week);
     const sourceCorrect = questions.filter(x => state.answers[x.i] === x.q.answer).length;
-    return `${lec} ${sourceCorrect}/${questions.length}`;
+    return `${week} ${sourceCorrect}/${questions.length}`;
   });
 
   document.getElementById("result-score").textContent = `${correct} / ${total}`;
@@ -655,7 +662,7 @@ document.getElementById("submit-btn").addEventListener("click", () => {
 });
 
 document.getElementById("reset-btn").addEventListener("click", () => {
-  if (Object.keys(state.revealed).length === 0 || confirm("새 문제 45개를 랜덤으로 뽑아 다시 시작할까요?")) {
+  if (Object.keys(state.revealed).length === 0 || confirm(`새 문제 ${state.questions.length}개를 랜덤으로 뽑아 다시 시작할까요?`)) {
     newRound();
   }
 });
