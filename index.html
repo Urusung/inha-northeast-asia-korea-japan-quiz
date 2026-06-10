@@ -3,112 +3,40 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#0f766e">
-<link rel="icon" href="data:,">
-<title>동북아와 한일관계 문제은행</title>
+<title>📘 동북아와 한일관계 퀴즈</title>
 <style>
-* { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans KR', sans-serif; max-width: 640px; margin: 40px auto; padding: 24px; background: #f7f8fa; color: #1f2937; }
+  h1 { color: #4f46e5; margin-bottom: 8px; }
+  .sub { color: #6b7280; margin-bottom: 32px; font-size: 14px; }
+  a.card { display: block; padding: 20px 22px; margin: 14px 0; background: white; border-radius: 14px; text-decoration: none; color: #111827; border: 2px solid transparent; box-shadow: 0 2px 8px rgba(0,0,0,0.06); transition: all 0.15s; }
+  a.card:hover { border-color: #4f46e5; transform: translateY(-2px); }
+  a.card .title { font-size: 17px; font-weight: 700; margin-bottom: 4px; }
+  a.card .desc { font-size: 13px; color: #6b7280; line-height: 1.55; }
+  footer { text-align: center; margin-top: 40px; font-size: 12px; color: #9ca3af; }
 
-body {
-  max-width: 680px;
-  margin: 40px auto;
-  padding: 24px;
-  background: #f5f7f8;
-  color: #1f2937;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", sans-serif;
-}
-
-h1 {
-  margin: 0 0 8px;
-  color: #0f766e;
-  font-size: 26px;
-  line-height: 1.25;
-  letter-spacing: 0;
-}
-
-.sub {
-  margin: 0 0 28px;
-  color: #6b7280;
-  font-size: 14px;
-  line-height: 1.6;
-}
-
-.card {
-  display: block;
-  padding: 20px 22px;
-  margin: 14px 0;
-  background: white;
-  border: 2px solid transparent;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(31, 41, 55, 0.06);
-  color: #111827;
-  text-decoration: none;
-  transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
-}
-
-.card:hover {
-  border-color: #0f766e;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 22px rgba(15, 118, 110, 0.12);
-}
-
-.title {
-  margin-bottom: 5px;
-  font-size: 17px;
-  font-weight: 800;
-}
-
-.desc {
-  color: #64748b;
-  font-size: 13px;
-  line-height: 1.55;
-}
-
-.meta {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-top: 16px;
-}
-
-.pill {
-  padding: 4px 9px;
-  background: #e8f5f2;
-  border-radius: 999px;
-  color: #0f766e;
-  font-size: 12px;
-  font-weight: 800;
-}
-
-footer {
-  margin-top: 34px;
-  text-align: center;
-  color: #94a3b8;
-  font-size: 12px;
-}
-
-@media (max-width: 640px) {
-  body { margin: 16px auto; padding: 16px; }
-  h1 { font-size: 22px; }
-  .sub { margin-bottom: 20px; font-size: 13px; }
-  .card { padding: 16px 18px; border-radius: 10px; }
-  .title { font-size: 15.5px; }
-  .desc { font-size: 12.5px; }
-}
+  @media (max-width: 640px) {
+    body { margin: 16px auto; padding: 16px; }
+    h1 { font-size: 22px; }
+    .sub { margin-bottom: 20px; font-size: 13px; }
+    a.card { padding: 16px 18px; margin: 10px 0; border-radius: 12px; }
+    a.card .title { font-size: 15.5px; }
+    a.card .desc { font-size: 12.5px; }
+    footer { margin-top: 28px; font-size: 11.5px; }
+  }
 </style>
 </head>
 <body>
-<h1>동북아와 한일관계 문제은행</h1>
-<p class="sub">6-14주차 PPTX 27개를 바탕으로 만든 객관식 복습 퀴즈입니다. 매번 주차별 균형을 맞춰 문제가 섞여 출제됩니다.</p>
+<h1>📘 동북아와 한일관계 퀴즈</h1>
+<p class="sub">인하대학교 · 객관식 개념 문제은행</p>
 
-<a class="card" href="quiz.html">
-  <div class="title">개념 퀴즈 시작</div>
-  <div class="desc">6-14주차 강의자료 · 전체 180문제 풀에서 주차별 랜덤 10문제씩 총 90문제</div>
-  <div class="meta">
-    <span class="pill">즉시 채점</span>
-    <span class="pill">오답 해설</span>
-    <span class="pill">자료별 필터</span>
-  </div>
+<a class="card" href="midterm.html">
+  <div class="title">📘 중간고사 개념 퀴즈</div>
+  <div class="desc">6~10주차 · 120문제 풀에서 주차별 랜덤 10문제씩 총 50문제</div>
+</a>
+
+<a class="card" href="final.html">
+  <div class="title">📗 기말고사 개념 퀴즈</div>
+  <div class="desc">11~14주차 · 60문제 풀에서 주차별 랜덤 10문제씩 총 40문제</div>
 </a>
 
 <footer>동북아와 한일관계 · 개인 시험 대비용</footer>
