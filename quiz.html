@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0f766e">
 <link rel="icon" href="data:,">
-<title>동북아와 한일관계 문제은행</title>
+<title>동북아와 한일관계 기말고사 퀴즈</title>
 <style>
 :root {
   color-scheme: light;
@@ -416,15 +416,15 @@ footer {
 <div class="container">
   <header>
     <div class="topline">
-      <h1>동북아와 한일관계 문제은행</h1>
+      <h1>동북아와 한일관계 기말고사</h1>
       <a class="home-link" href="index.html">목록</a>
     </div>
-    <p>6-14주차 PPTX 27개 기반 · 주차별 랜덤 10문제씩 총 90문제</p>
+    <p>시험범위 6~14주차 · 문제유형 객관식 50문항</p>
     <div class="pool-info" id="pool-info"></div>
   </header>
 
   <div class="progress-bar" aria-live="polite">
-    <span class="progress-text" id="progress-text">0 / 90</span>
+    <span class="progress-text" id="progress-text">0 / 50</span>
     <div class="progress-track" aria-hidden="true"><div class="progress-fill" id="progress-fill"></div></div>
     <span class="score-badge" id="score-badge">정답 0</span>
   </div>
@@ -432,7 +432,7 @@ footer {
   <div class="filter-bar" id="filter-bar"></div>
 
   <div class="result-card" id="result-card">
-    <div class="result-score" id="result-score">0 / 90</div>
+    <div class="result-score" id="result-score">0 / 50</div>
     <div class="result-detail" id="result-detail">정답률 0%</div>
     <div class="result-message" id="result-message"></div>
     <div class="result-breakdown" id="result-breakdown"></div>
@@ -445,14 +445,14 @@ footer {
     <button class="btn btn-primary" id="submit-btn" type="button">결과 보기</button>
   </div>
 
-  <footer>PPTX 강의자료 기반 개인 복습용 문제은행</footer>
+  <footer>동북아와 한일관계 기말고사 · 개인 시험 대비용</footer>
 </div>
 
 <script src="questions.js"></script>
 <script>
 const POOL = window.QUESTION_POOL || [];
 const WEEKS = window.WEEK_ORDER || [...new Set(POOL.map(getWeek))];
-const PICK_PER_WEEK = 10;
+const PICK_TOTAL = 50;
 
 function getWeek(q) {
   const lec = typeof q === "string" ? q : q.lec;
@@ -514,16 +514,24 @@ function pickFromPool(pool, count, currentRoundIds) {
 }
 
 function pickQuestions() {
-  const picked = [];
+  const targetTotal = Math.min(PICK_TOTAL, POOL.length);
   const currentRoundIds = new Set();
+  const activeWeeks = WEEKS.filter(week => POOL.some(q => getWeek(q) === week));
+  const baseCount = activeWeeks.length ? Math.floor(targetTotal / activeWeeks.length) : targetTotal;
+  const extraWeeks = new Set(shuffle(activeWeeks).slice(0, targetTotal % Math.max(activeWeeks.length, 1)));
+  const picked = [];
 
-  for (const week of WEEKS) {
+  for (const week of activeWeeks) {
     const pool = POOL.filter(q => getWeek(q) === week);
-    const count = Math.min(PICK_PER_WEEK, pool.length);
+    const count = Math.min(baseCount + (extraWeeks.has(week) ? 1 : 0), pool.length);
     picked.push(...pickFromPool(pool, count, currentRoundIds));
   }
 
-  return picked.map(shuffleChoices);
+  if (picked.length < targetTotal) {
+    picked.push(...pickFromPool(POOL, targetTotal - picked.length, currentRoundIds));
+  }
+
+  return shuffle(picked).map(shuffleChoices);
 }
 
 function newRound() {
